@@ -1,0 +1,1 @@
+ALTER TABLE employees MODIFY COLUMN salary DECIMAL(6,2)
