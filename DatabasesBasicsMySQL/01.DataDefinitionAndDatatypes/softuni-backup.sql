@@ -24,9 +24,9 @@ CREATE TABLE IF NOT EXISTS `addresses` (
   PRIMARY KEY (`id`),
   KEY `town_id` (`town_id`),
   CONSTRAINT `addresses_ibfk_1` FOREIGN KEY (`town_id`) REFERENCES `towns` (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=8 DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB AUTO_INCREMENT=7 DEFAULT CHARSET=latin1;
 
--- Dumping data for table softuni.addresses: ~3 rows (approximately)
+-- Dumping data for table softuni.addresses: ~4 rows (approximately)
 /*!40000 ALTER TABLE `addresses` DISABLE KEYS */;
 INSERT INTO `addresses` (`id`, `address_text`, `town_id`) VALUES
 	(1, 'bul.Bulgaria', 1),
