@@ -32,22 +32,6 @@ public class User {
     // ============================================================================
     // ============================================================================
 
-    public User(int id) {
-        this(id, null, null, null, null);
-    }
-
-    public User(int id, String username) {
-        this(id, username, null, null, null);
-    }
-
-    public User(int id, String username, String password) {
-        this(id, username, password, null, null);
-    }
-
-    public User(int id, String username, String password, Integer age) {
-        this(id, username, password, age, null);
-    }
-
     public User(int id, String username, String password, Integer age, Date registrationDate) {
         this.setId(id);
         this.setUsername(username);
@@ -55,10 +39,6 @@ public class User {
         this.setAge(age);
         this.setRegistrationDate(registrationDate);
     }
-
-    // ============================================================================
-    // ============================================================================
-    // ============================================================================
 
     public int getId() {
         return this.id;
@@ -98,5 +78,16 @@ public class User {
 
     private void setRegistrationDate(Date registrationDate) {
         this.registrationDate = registrationDate;
+    }
+
+    // ============================================================================
+    // ============================================================================
+    // ============================================================================
+
+
+    @Override
+    public String toString() {
+        return String.format("ID: %d, USERNAME: %s, PASSWORD: %s, AGE: %s, DATE: %s",
+                this.getId(), this.getUsername(), this.getPassword(), this.getAge(), this.getRegistrationDate());
     }
 }

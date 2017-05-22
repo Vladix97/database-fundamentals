@@ -15,4 +15,6 @@ public class Constants {
 
     public static final String SQL_CREATE_DATABASE_IF_NOT_EXISTS = "CREATE DATABASE IF NOT EXISTS %s";
 
+    public static final String SQL_SELECT_FROM_DATABASE = "SELECT * FROM %s";
+
 }

@@ -4,14 +4,20 @@ import app.annotations.Column;
 import app.annotations.Entity;
 import app.annotations.Id;
 import app.connections.DatabaseConnection;
+import app.constants.Constants;
 
 import javax.swing.text.DateFormatter;
+import java.lang.reflect.Constructor;
 import java.lang.reflect.Field;
+import java.lang.reflect.InvocationTargetException;
 import java.sql.Connection;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.List;
 
 /**
  * Created by vladix on 5/22/17.
@@ -38,8 +44,37 @@ public class EntityManager implements Manager {
     }
 
     @Override
-    public <E> Iterable<E> find(Class<E> table) {
-        return null;
+    public <E> Iterable<E> find(String databaseName, Class<E> table) throws SQLException, NoSuchMethodException, IllegalAccessException, InvocationTargetException, InstantiationException {
+        Connection connection = DatabaseConnection.getConnection(databaseName);
+        String tableName = null;
+        if (table.isAnnotationPresent(Entity.class)) {
+            tableName = table.getDeclaredAnnotation(Entity.class).tableName();
+        }
+
+        if (tableName == null) {
+            throw new IllegalArgumentException("Class is not an entity");
+        }
+
+        List<E> entities = new ArrayList<>();
+        Constructor<E> constructor = table.getConstructor(int.class, String.class, String.class, Integer.class, Date.class);
+
+        try (Statement statement = connection.createStatement();
+             ResultSet resultSet = statement.executeQuery(String.format(Constants.SQL_SELECT_FROM_DATABASE, tableName))
+        ) {
+
+            while (resultSet.next()) {
+                int id = resultSet.getInt("user_id");
+                String username = resultSet.getString("username");
+                String password = resultSet.getString("password");
+                Integer age = resultSet.getInt("age");
+                Date date = resultSet.getDate("registration_date");
+
+                E entity = constructor.newInstance(id, username, password, age, date);
+                entities.add(entity);
+            }
+        }
+
+        return entities;
     }
 
     @Override
@@ -129,10 +164,12 @@ public class EntityManager implements Manager {
             declaredField.setAccessible(true);
 
             if (declaredField.isAnnotationPresent(Column.class)) {
-                if (declaredField.getType().getSimpleName().equals("Date")) {
-                    values.append("'" + new SimpleDateFormat("yyyy-MM-d").format(declaredField.get(entity)) + "'");
-                } else if (declaredField.get(entity) != null) {
-                    values.append("'" + declaredField.get(entity) + "'");
+                if (declaredField.get(entity) != null) {
+                    if (declaredField.getType().getSimpleName().equals("Date")) {
+                        values.append("'" + new SimpleDateFormat("yyyy-MM-d").format(declaredField.get(entity)) + "'");
+                    } else {
+                        values.append("'" + declaredField.get(entity) + "'");
+                    }
                 } else {
                     values.append(declaredField.get(entity));
                 }
@@ -213,7 +250,7 @@ public class EntityManager implements Manager {
                 }
 
                 if (declaredField.isAnnotationPresent(Id.class)) {
-                    columns.append(" PRIMARY KEY AUTO_INCREMENT");
+                    columns.append(" PRIMARY KEY");
                 }
 
                 columns.append(",");

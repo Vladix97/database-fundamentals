@@ -1,5 +1,6 @@
 package app.orm;
 
+import java.lang.reflect.InvocationTargetException;
 import java.sql.SQLException;
 
 /**
@@ -9,7 +10,7 @@ public interface Manager {
 
     <E> void persist(String databaseName, E entity) throws IllegalAccessException, SQLException; // it will insert or update entity depending if it is attached to the context
 
-    <E> Iterable<E> find(Class<E> table); // returns collection of all entity objects of type E
+    <E> Iterable<E> find(String databaseName, Class<E> table) throws SQLException, NoSuchMethodException, IllegalAccessException, InvocationTargetException, InstantiationException; // returns collection of all entity objects of type E
 
     <E> Iterable<E> find(Class<E> table, String where); // returns collection of all entity objects of type T matching the criteria given in “where”
 
