@@ -6,6 +6,7 @@ import app.orm.Manager;
 
 import java.lang.reflect.InvocationTargetException;
 import java.sql.SQLException;
+import java.util.Arrays;
 import java.util.Date;
 
 /**
@@ -23,10 +24,18 @@ public class Main {
         manager.persist("mini_orm", new User(321, "newName3", "1234", null, new Date(1234, 05, 1)));
         manager.persist("mini_orm", new User(213, "newName4", "1234", 18, null));
 
-        Iterable<User> mini_orm = manager.find("mini_orm", User.class);
-        for (User user : mini_orm) {
+
+        Iterable<User> entities = manager.find("mini_orm", User.class);
+        for (User user : entities) {
             System.out.println(user);
         }
+
+        System.out.println("==================================");
+        System.out.println("==================================");
+        System.out.println("==================================");
+
+        User mini_orm = manager.findFirst("mini_orm", User.class);
+        System.out.println(mini_orm);
 
     }
 }

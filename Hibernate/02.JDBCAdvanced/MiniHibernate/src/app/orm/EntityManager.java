@@ -6,7 +6,6 @@ import app.annotations.Id;
 import app.connections.DatabaseConnection;
 import app.constants.Constants;
 
-import javax.swing.text.DateFormatter;
 import java.lang.reflect.Constructor;
 import java.lang.reflect.Field;
 import java.lang.reflect.InvocationTargetException;
@@ -15,9 +14,7 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 import java.text.SimpleDateFormat;
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.List;
+import java.util.*;
 
 /**
  * Created by vladix on 5/22/17.
@@ -74,23 +71,72 @@ public class EntityManager implements Manager {
             }
         }
 
+        connection.close();
         return entities;
     }
 
     @Override
-    public <E> Iterable<E> find(Class<E> table, String where) {
-        return null;
+    public <E> Iterable<E> find(String databaseName, Class<E> table, String where) throws InvocationTargetException, SQLException, InstantiationException, IllegalAccessException, NoSuchMethodException {
+        List<E> filtered = new ArrayList<>();
+
+        Iterable<E> entities = this.find(databaseName, table);
+        Map<String, String> valueByFieldName = getValueByFieldName(where);
+
+        for (E entity : entities) {
+            Field[] declaredFields = table.getDeclaredFields();
+            for (Field declaredField : declaredFields) {
+                declaredField.setAccessible(true);
+
+                String fieldName = declaredField.getName();
+                Object fieldValue = declaredField.get(entity);
+
+                if (fieldValue != null &&
+                        valueByFieldName.containsKey(fieldName) &&
+                        valueByFieldName.get(fieldName).equals(fieldValue.toString())) {
+                    filtered.add(entity);
+                }
+            }
+        }
+
+        return filtered;
     }
 
     @Override
-    public <E> E findFirst(Class<E> table) {
-        return null;
+    public <E> E findFirst(String databaseName, Class<E> table) throws InvocationTargetException, SQLException, InstantiationException, IllegalAccessException, NoSuchMethodException {
+        Iterable<E> entities = this.find(databaseName, table);
+        try {
+            return entities.iterator().next();
+        } catch (NoSuchElementException e) {
+            return null;
+        }
     }
 
     @Override
-    public <E> E findFirst(Class<E> table, String where) {
-        return null;
+    public <E> E findFirst(String databaseName, Class<E> table, String where) throws SQLException, NoSuchMethodException, InstantiationException, IllegalAccessException, InvocationTargetException {
+        Iterable<E> entities = this.find(databaseName, table, where);
+        try {
+            return entities.iterator().next();
+        } catch (NoSuchElementException e) {
+            return null;
+        }
     }
+
+    private Map<String, String> getValueByFieldName(String where) {
+        String[] whereArguments = where.split("=|\\s+AND\\s+");
+        Map<String, String> valueByFieldName = new HashMap<>();
+        for (int i = 0; i < whereArguments.length; i += 2) {
+            String fieldName = whereArguments[i];
+            String value = whereArguments[i + 1];
+            if (value.startsWith("'")) {
+                value = value.substring(1, value.length() - 1);
+            }
+
+            valueByFieldName.put(fieldName, value);
+        }
+
+        return valueByFieldName;
+    }
+
 
     private String getTableName(Class<?> entityClass) {
         String tableName = null;

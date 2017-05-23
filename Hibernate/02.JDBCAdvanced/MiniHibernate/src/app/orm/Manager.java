@@ -12,10 +12,10 @@ public interface Manager {
 
     <E> Iterable<E> find(String databaseName, Class<E> table) throws SQLException, NoSuchMethodException, IllegalAccessException, InvocationTargetException, InstantiationException; // returns collection of all entity objects of type E
 
-    <E> Iterable<E> find(Class<E> table, String where); // returns collection of all entity objects of type T matching the criteria given in “where”
+    <E> Iterable<E> find(String databaseName, Class<E> table, String where) throws InvocationTargetException, SQLException, InstantiationException, IllegalAccessException, NoSuchMethodException; // returns collection of all entity objects of type T matching the criteria given in “where”
 
-    <E> E findFirst(Class<E> table); // returns the first entity object of type E
+    <E> E findFirst(String databaseName, Class<E> table) throws InvocationTargetException, SQLException, InstantiationException, IllegalAccessException, NoSuchMethodException; // returns the first entity object of type E
 
-    <E> E findFirst(Class<E> table, String where); // returns the first entity object of type E matching the criteria given in “where”
+    <E> E findFirst(String databaseName, Class<E> table, String where) throws SQLException, NoSuchMethodException, InstantiationException, IllegalAccessException, InvocationTargetException; // returns the first entity object of type E matching the criteria given in “where”
 
 }
