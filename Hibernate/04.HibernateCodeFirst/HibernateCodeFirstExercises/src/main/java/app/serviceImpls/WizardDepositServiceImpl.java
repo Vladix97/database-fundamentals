@@ -9,8 +9,12 @@ import org.springframework.stereotype.Service;
 @Service
 public class WizardDepositServiceImpl implements WizardDepositService {
 
+    private final WizardDepositDao wizardDepositDao;
+
     @Autowired
-    private WizardDepositDao wizardDepositDao;
+    public WizardDepositServiceImpl(WizardDepositDao wizardDepositDao) {
+        this.wizardDepositDao = wizardDepositDao;
+    }
 
     @Override
     public void persist(WizardDeposit wizardDeposit) {

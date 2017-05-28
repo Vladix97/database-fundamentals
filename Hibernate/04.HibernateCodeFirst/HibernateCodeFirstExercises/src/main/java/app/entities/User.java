@@ -12,6 +12,7 @@ public class User {
 
     private static final String PASSWORD_PATTERN =
             "^(?=.*[0-9])(?=.*[a-z])(?=.*[A-Z])(?=.*[@#$%^&+=])(?=\\S+$).{8,}$";
+    public static final int ONE_MB = 1048576;
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -95,6 +96,10 @@ public class User {
     }
 
     public void setProfilePicture(byte[] profilePicture) {
+        if(profilePicture.length > ONE_MB){
+            throw new IllegalArgumentException("Profile Picture too big");
+        }
+
         this.profilePicture = profilePicture;
     }
 
@@ -133,4 +138,6 @@ public class User {
     public void setDeleted(Boolean deleted) {
         isDeleted = deleted;
     }
+
+
 }

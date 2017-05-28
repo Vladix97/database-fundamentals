@@ -16,11 +16,15 @@ import java.util.Date;
 @Component
 public class Terminal implements CommandLineRunner {
 
-    @Autowired
-    private WizardDepositService wizardDepositService;
+    private final WizardDepositService wizardDepositService;
+
+    private final UserService userService;
 
     @Autowired
-    private UserService userService;
+    public Terminal(WizardDepositService wizardDepositService, UserService userService) {
+        this.wizardDepositService = wizardDepositService;
+        this.userService = userService;
+    }
 
     @Override
     public void run(String... strings) throws Exception {
@@ -50,7 +54,7 @@ public class Terminal implements CommandLineRunner {
         user.setPassword("Aa#242dsa34");
         user.setEmail("pesho@abv.bg");
 
-        File picture = new File("res/pic1.png");
+        File picture = new File("res/pic2.jpg");
         byte[] pictureBytes = new byte[(int) picture.length()];
         FileInputStream fis = new FileInputStream(picture);
         fis.read(pictureBytes);
