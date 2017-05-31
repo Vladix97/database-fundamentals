@@ -42,8 +42,8 @@ public abstract class AbstractIngredient implements Ingredient {
     }
 
     protected AbstractIngredient(String name, BigDecimal price) {
-        this.name = name;
-        this.price = price;
+        this.setName(name);
+        this.setPrice(price);
     }
 
     @Override

@@ -20,7 +20,7 @@ public abstract class AbstractChemicalIngredient extends AbstractIngredient impl
 
     protected AbstractChemicalIngredient(String name, BigDecimal price, String chemicalFormula) {
         super(name, price);
-        this.chemicalFormula = chemicalFormula;
+        this.setChemicalFormula(chemicalFormula);
     }
 
     @Override
