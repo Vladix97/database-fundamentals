@@ -7,6 +7,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Primary;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
+
 @Service
 @Primary
 public class CategoryServiceImpl implements CategoryService {
@@ -21,5 +23,15 @@ public class CategoryServiceImpl implements CategoryService {
     @Override
     public void save(Category category) {
         this.categoryRepository.saveAndFlush(category);
+    }
+
+    @Override
+    public List<Category> findByNameIn(String... categories) {
+        return this.categoryRepository.findByNameIn(categories);
+    }
+
+    @Override
+    public List<Object[]> findTotalProfitByCategory() {
+        return this.categoryRepository.findTotalProfitByCategory();
     }
 }

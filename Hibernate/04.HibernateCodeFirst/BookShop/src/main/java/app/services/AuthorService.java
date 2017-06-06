@@ -11,4 +11,6 @@ public interface AuthorService {
     List<Author> findAll();
 
     void save(Author author);
+
+    List<Author> findByFirstNameEndingWith(String string);
 }

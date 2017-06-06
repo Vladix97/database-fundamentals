@@ -34,4 +34,9 @@ public class AuthorServiceImpl implements AuthorService {
     public void save(Author author) {
         this.authorRepository.saveAndFlush(author);
     }
+
+    @Override
+    public List<Author> findByFirstNameEndingWith(String string) {
+        return this.authorRepository.findByFirstNameEndingWith(string);
+    }
 }
