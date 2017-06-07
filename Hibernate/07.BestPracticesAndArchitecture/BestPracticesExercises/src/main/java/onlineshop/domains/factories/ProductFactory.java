@@ -1,0 +1,16 @@
+package onlineshop.domains.factories;
+
+import onlineshop.domains.models.Product;
+
+import java.math.BigDecimal;
+
+public class ProductFactory {
+
+    public Product create(String name, BigDecimal price) {
+        Product product = new Product();
+        product.setName(name);
+        product.setPrice(price);
+
+        return product;
+    }
+}
