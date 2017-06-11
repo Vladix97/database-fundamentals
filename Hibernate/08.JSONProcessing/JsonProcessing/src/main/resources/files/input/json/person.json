@@ -1,0 +1,12 @@
+{
+  "name": "PESHO",
+  "phoneNumberDtos": [
+    {
+      "number": "555-666-777-888-999-1000"
+    }
+  ],
+  "addressDto": {
+    "country": "BULGARIA",
+    "city": "SOFIA"
+  }
+}
