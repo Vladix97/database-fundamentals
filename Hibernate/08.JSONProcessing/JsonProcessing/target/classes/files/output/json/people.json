@@ -1,0 +1,26 @@
+[
+  {
+    "name": "GOSHO",
+    "phoneNumberDtos": [
+      {
+        "number": "000-111-222-333-444-555"
+      }
+    ],
+    "addressDto": {
+      "country": "GERMANY",
+      "city": "BERLIN"
+    }
+  },
+  {
+    "name": "GOSHO",
+    "phoneNumberDtos": [
+      {
+        "number": "000-111-222-333-444-555"
+      }
+    ],
+    "addressDto": {
+      "country": "GERMANY",
+      "city": "BERLIN"
+    }
+  }
+]

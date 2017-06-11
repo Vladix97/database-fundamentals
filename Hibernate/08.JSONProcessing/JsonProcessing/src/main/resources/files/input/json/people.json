@@ -1,0 +1,26 @@
+[
+  {
+    "name": "A",
+    "phoneNumberDtos": [
+      {
+        "number": "000-000-000-000-000-000"
+      }
+    ],
+    "addressDto": {
+      "country": "AA",
+      "city": "AAA"
+    }
+  },
+  {
+    "name": "B",
+    "phoneNumberDtos": [
+      {
+        "number": "111-111-111-111-111-111"
+      }
+    ],
+    "addressDto": {
+      "country": "BB",
+      "city": "BBB"
+    }
+  }
+]

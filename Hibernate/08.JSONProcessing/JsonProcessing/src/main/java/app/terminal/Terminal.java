@@ -3,6 +3,7 @@ package app.terminal;
 import app.domain.dto.AddressDto;
 import app.domain.dto.PersonDto;
 import app.domain.dto.PhoneNumberDto;
+import app.domain.model.Person;
 import app.io.JsonParser;
 import app.service.PersonService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -10,6 +11,8 @@ import org.springframework.boot.CommandLineRunner;
 import org.springframework.stereotype.Component;
 
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
 
 @Component
 public class Terminal implements CommandLineRunner {
@@ -38,7 +41,36 @@ public class Terminal implements CommandLineRunner {
 
 //        this.exportToJson();
 
-        this.importJson();
+//        this.exportManyToJson();
+
+//        this.importJson();
+
+        this.importManyFromJson();
+    }
+
+    private void importManyFromJson() {
+        try {
+            PersonDto[] personDtos = this.jsonParser.importJson(PersonDto[].class, "/files/input/json/people.json");
+            for (PersonDto personDto : personDtos) {
+                this.personService.persist(personDto);
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+    private void exportManyToJson() {
+        PersonDto personDto = this.getPersonDto();
+        PersonDto personDto1 = this.getPersonDto();
+        List<PersonDto> personDtos = new ArrayList<>();
+        personDtos.add(personDto);
+        personDtos.add(personDto1);
+
+        try {
+            this.jsonParser.exportJson(personDtos, "src/main/resources/files/output/json/people.json");
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
 
     private void importJson() {
