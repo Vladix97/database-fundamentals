@@ -2,14 +2,18 @@ package app.domain.dto;
 
 import com.google.gson.annotations.Expose;
 
+import javax.xml.bind.annotation.*;
 import java.io.Serializable;
 
+@XmlRootElement(name = "phoneNumber")
+@XmlAccessorType(XmlAccessType.FIELD)
 public class PhoneNumberDto implements Serializable {
 
+    @XmlElement(name = "number")
     @Expose
     private String number;
 
-//    @Expose
+    @XmlTransient
     private PersonDto personDto;
 
     public PhoneNumberDto() {

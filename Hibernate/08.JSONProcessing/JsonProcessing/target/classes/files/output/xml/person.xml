@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<person>
+    <name>GOSHO</name>
+    <phoneNumbers>
+        <phoneNumber>
+            <number>000-111-222-333-444-555</number>
+        </phoneNumber>
+    </phoneNumbers>
+    <address>
+        <country>GERMANY</country>
+        <city>BERLIN</city>
+    </address>
+</person>

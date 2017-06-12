@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<people>
+    <person>
+        <name>1111111111111111</name>
+        <phoneNumbers>
+            <phoneNumber>
+                <number>1111111111</number>
+            </phoneNumber>
+        </phoneNumbers>
+        <address>
+            <country>111111111111</country>
+            <city>1111111111111111111111</city>
+        </address>
+    </person>
+    <person>
+        <name>22222222222</name>
+        <phoneNumbers>
+            <phoneNumber>
+                <number>22222222222222222</number>
+            </phoneNumber>
+        </phoneNumbers>
+        <address>
+            <country>22222222222222222</country>
+            <city>22222222222</city>
+        </address>
+    </person>
+</people>

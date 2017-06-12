@@ -1,15 +1,18 @@
 package app.terminal;
 
 import app.domain.dto.AddressDto;
+import app.domain.dto.PeopleCollectionDto;
 import app.domain.dto.PersonDto;
 import app.domain.dto.PhoneNumberDto;
-import app.domain.model.Person;
 import app.io.JsonParser;
+import app.io.XmlParser;
 import app.service.PersonService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.stereotype.Component;
 
+import javax.xml.bind.JAXBException;
+import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
@@ -21,10 +24,13 @@ public class Terminal implements CommandLineRunner {
 
     private final JsonParser jsonParser;
 
+    private final XmlParser xmlParser;
+
     @Autowired
-    public Terminal(PersonService personService, JsonParser jsonParser) {
+    public Terminal(PersonService personService, JsonParser jsonParser, XmlParser xmlParser) {
         this.personService = personService;
         this.jsonParser = jsonParser;
+        this.xmlParser = xmlParser;
     }
 
     @Override
@@ -43,9 +49,67 @@ public class Terminal implements CommandLineRunner {
 
 //        this.exportManyToJson();
 
-//        this.importJson();
+//        this.importFromJson();
 
-        this.importManyFromJson();
+//        this.importManyFromJson();
+
+//        this.exportToXml();
+
+//        this.importFromXml();
+
+//        this.exportManyToXml();
+
+        this.importManyFromXml();
+    }
+
+    private void importManyFromXml() {
+        try {
+            PeopleCollectionDto peopleCollectionDto = this.xmlParser.importXml(
+                    PeopleCollectionDto.class,
+                    "src/main/resources/files/input/xml/people.xml"
+            );
+
+            for (PersonDto personDto : peopleCollectionDto.getPeopleDto()) {
+                this.personService.persist(personDto);
+            }
+        } catch (IOException | JAXBException e) {
+            e.printStackTrace();
+        }
+    }
+
+    private void importFromXml() {
+        try {
+            PersonDto personDto = this.xmlParser.importXml(
+                    PersonDto.class,
+                    "src/main/resources/files/input/xml/person.xml"
+            );
+            this.personService.persist(personDto);
+        } catch (IOException | JAXBException e) {
+            e.printStackTrace();
+        }
+    }
+
+    private void exportToXml() {
+        PersonDto personDto = this.getPersonDto();
+        try {
+            this.xmlParser.writeXML(personDto, "src/main/resources/files/output/xml/person.xml");
+        } catch (JAXBException | FileNotFoundException e) {
+            e.printStackTrace();
+        }
+    }
+
+    private void exportManyToXml() {
+        PeopleCollectionDto personDto = new PeopleCollectionDto();
+        personDto.getPeopleDto().add(this.getPersonDto());
+        personDto.getPeopleDto().add(this.getPersonDto());
+        personDto.getPeopleDto().add(this.getPersonDto());
+        personDto.getPeopleDto().add(this.getPersonDto());
+
+        try {
+            this.xmlParser.writeXML(personDto, "src/main/resources/files/output/xml/people.xml");
+        } catch (JAXBException | FileNotFoundException e) {
+            e.printStackTrace();
+        }
     }
 
     private void importManyFromJson() {
@@ -73,7 +137,7 @@ public class Terminal implements CommandLineRunner {
         }
     }
 
-    private void importJson() {
+    private void importFromJson() {
         try {
             PersonDto personDtoFromJSON = null;
             personDtoFromJSON = this.jsonParser.importJson(PersonDto.class, "/files/input/json/person.json");
