@@ -92,7 +92,7 @@ public class Terminal implements CommandLineRunner {
     private void exportToXml() {
         PersonDto personDto = this.getPersonDto();
         try {
-            this.xmlParser.writeXML(personDto, "src/main/resources/files/output/xml/person.xml");
+            this.xmlParser.exportXML(personDto, "src/main/resources/files/output/xml/person.xml");
         } catch (JAXBException | FileNotFoundException e) {
             e.printStackTrace();
         }
@@ -106,7 +106,7 @@ public class Terminal implements CommandLineRunner {
         personDto.getPeopleDto().add(this.getPersonDto());
 
         try {
-            this.xmlParser.writeXML(personDto, "src/main/resources/files/output/xml/people.xml");
+            this.xmlParser.exportXML(personDto, "src/main/resources/files/output/xml/people.xml");
         } catch (JAXBException | FileNotFoundException e) {
             e.printStackTrace();
         }
