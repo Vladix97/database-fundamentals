@@ -1,4 +1,4 @@
-package app.controllers;
+package app.repositories;
 
 import app.domains.entities.reports.Report;
 import org.springframework.data.jpa.repository.JpaRepository;

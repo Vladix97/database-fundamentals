@@ -4,5 +4,7 @@ import app.domains.dtos.AirConditionerDto;
 
 public interface AirConditionerService {
 
-    public <D> void persist(AirConditionerDto abstractAirConditionerDto, Class<D> destination);
+    <D> void persist(AirConditionerDto abstractAirConditionerDto, Class<D> destination);
+
+    AirConditionerDto findByManufacturerAndModel(String manufacturer, String model);
 }

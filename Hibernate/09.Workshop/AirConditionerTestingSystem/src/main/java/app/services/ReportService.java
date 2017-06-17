@@ -4,5 +4,5 @@ import app.domains.dtos.ReportDto;
 
 public interface ReportService {
 
-    public void persist(ReportDto reportDto);
+    void persist(ReportDto reportDto);
 }

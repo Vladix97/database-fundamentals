@@ -22,7 +22,6 @@ public class StationaryAirConditioner extends AbstractAirConditioner {
         super(manufacturer, model);
 
         this.setRequiredEfficiencyRating(efficiencyRating);
-        this.setRealEfficiencyRating(this.calculateEfficiencyRating(powerUsage));
         this.setPowerUsage(powerUsage);
     }
 
@@ -51,19 +50,5 @@ public class StationaryAirConditioner extends AbstractAirConditioner {
 
     public void setPowerUsage(Integer powerUsage) {
         this.powerUsage = powerUsage;
-    }
-
-    private EfficiencyRating calculateEfficiencyRating(Integer powerUsage) {
-        if (powerUsage > 2000) {
-            return EfficiencyRating.E;
-        } else if (powerUsage >= 1501 && powerUsage <= 2000) {
-            return EfficiencyRating.D;
-        } else if (powerUsage >= 1251 && powerUsage <= 1500) {
-            return EfficiencyRating.C;
-        } else if (powerUsage >= 1000 && powerUsage <= 1250) {
-            return EfficiencyRating.B;
-        } else {
-            return EfficiencyRating.A;
-        }
     }
 }

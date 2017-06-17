@@ -10,7 +10,11 @@ public class AirConditionerDto {
 
     private Integer electricityUsed;
 
+    private Integer volumeCovered;
+
     private String requiredEfficiencyRating;
+
+    private String realEfficiencyRating;
 
     public AirConditionerDto() {
         super();
@@ -48,11 +52,27 @@ public class AirConditionerDto {
         this.electricityUsed = electricityUsed;
     }
 
+    public Integer getVolumeCovered() {
+        return this.volumeCovered;
+    }
+
+    public void setVolumeCovered(Integer volumeCovered) {
+        this.volumeCovered = volumeCovered;
+    }
+
     public String getRequiredEfficiencyRating() {
         return this.requiredEfficiencyRating;
     }
 
     public void setRequiredEfficiencyRating(String requiredEfficiencyRating) {
         this.requiredEfficiencyRating = requiredEfficiencyRating;
+    }
+
+    public String getRealEfficiencyRating() {
+        return this.realEfficiencyRating;
+    }
+
+    public void setRealEfficiencyRating(String realEfficiencyRating) {
+        this.realEfficiencyRating = realEfficiencyRating;
     }
 }
