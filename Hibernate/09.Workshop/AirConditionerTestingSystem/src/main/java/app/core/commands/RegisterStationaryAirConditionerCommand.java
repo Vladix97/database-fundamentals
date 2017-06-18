@@ -15,7 +15,6 @@ public class RegisterStationaryAirConditionerCommand extends AbstractCommand {
         super(date);
     }
 
-    // Toshiba,EX1000,B,1000
     @Override
     public String execute() {
         AirConditionerDto airConditionerDto = new AirConditionerDto();

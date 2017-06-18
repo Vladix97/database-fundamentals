@@ -10,8 +10,6 @@ import app.services.ReportService;
 
 public class TestAirConditionerCommand extends AbstractCommand {
 
-
-
     @Inject
     private ReportService reportService;
 
