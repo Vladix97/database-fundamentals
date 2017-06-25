@@ -7,4 +7,5 @@ import org.springframework.stereotype.Repository;
 @Repository
 public interface SolarSystemRepository extends JpaRepository<SolarSystem, Long> {
 
+    SolarSystem findByName(String name);
 }
