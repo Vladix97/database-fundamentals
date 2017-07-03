@@ -2,10 +2,12 @@ package massdefect.domains.entities;
 
 import javax.persistence.*;
 import java.io.Serializable;
+import java.util.HashSet;
+import java.util.Set;
 
 @Entity
 @Table(name = "anomalies")
-public class Anomalie implements Serializable {
+public class Anomaly implements Serializable {
 
     private Long id;
 
@@ -13,8 +15,12 @@ public class Anomalie implements Serializable {
 
     private Planet teleportPlanet;
 
-    public Anomalie() {
+    private Set<Person> people;
+
+    public Anomaly() {
         super();
+
+        this.people = new HashSet<>();
     }
 
     @Id
@@ -46,5 +52,22 @@ public class Anomalie implements Serializable {
 
     public void setTeleportPlanet(Planet teleportPlanet) {
         this.teleportPlanet = teleportPlanet;
+    }
+
+    @ManyToMany
+    @JoinTable(name = "anomalies_victims",
+            joinColumns = @JoinColumn(name = "anomaly_id", referencedColumnName = "id"),
+            inverseJoinColumns = @JoinColumn(name = "person_id", referencedColumnName = "id"))
+    public Set<Person> getPeople() {
+        return this.people;
+    }
+
+    public void setPeople(Set<Person> people) {
+        this.people = people;
+    }
+
+    public void addPerson(Person person) {
+        Set<Person> people = this.getPeople();
+        people.add(person);
     }
 }

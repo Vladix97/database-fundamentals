@@ -1,9 +1,9 @@
 package massdefect.serivces;
 
 
-import massdefect.domains.dtos.json.StarImportDto;
+import massdefect.domains.dtos.json.StarImportJSONDto;
 
 public interface StarService {
 
-    public void create(StarImportDto starImportDto);
+    public void create(StarImportJSONDto starImportDto);
 }

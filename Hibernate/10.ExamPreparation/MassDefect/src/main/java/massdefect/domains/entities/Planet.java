@@ -1,7 +1,10 @@
 package massdefect.domains.entities;
 
 import javax.persistence.*;
+import javax.validation.constraints.NotNull;
 import java.io.Serializable;
+import java.util.HashSet;
+import java.util.Set;
 
 @Entity
 @Table(name = "planets")
@@ -15,8 +18,12 @@ public class Planet implements Serializable {
 
     private SolarSystem solarSystem;
 
+    private Set<Anomaly> anomalies;
+
     public Planet() {
         super();
+
+        this.anomalies = new HashSet<>();
     }
 
     @Id
@@ -39,6 +46,7 @@ public class Planet implements Serializable {
         this.name = name;
     }
 
+    @NotNull
     @ManyToOne
     @JoinColumn(name = "sun_id", referencedColumnName = "id")
     public Star getSun() {
@@ -49,6 +57,7 @@ public class Planet implements Serializable {
         this.sun = sun;
     }
 
+    @NotNull
     @ManyToOne
     @JoinColumn(name = "solar_system_id", referencedColumnName = "id")
     public SolarSystem getSolarSystem() {
@@ -57,5 +66,14 @@ public class Planet implements Serializable {
 
     public void setSolarSystem(SolarSystem solarSystem) {
         this.solarSystem = solarSystem;
+    }
+
+    @ManyToMany(mappedBy = "teleportPlanet")
+    public Set<Anomaly> getAnomalies() {
+        return this.anomalies;
+    }
+
+    public void setAnomalies(Set<Anomaly> anomalies) {
+        this.anomalies = anomalies;
     }
 }

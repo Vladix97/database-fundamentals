@@ -1,7 +1,9 @@
 package massdefect.domains.entities;
 
 import javax.persistence.*;
+import javax.validation.constraints.NotNull;
 import java.io.Serializable;
+import java.util.HashSet;
 import java.util.Set;
 
 @Entity
@@ -14,10 +16,12 @@ public class Person implements Serializable {
 
     private Planet homePlanet;
 
-    private Set<Person> persons;
+    private Set<Anomaly> anomalies;
 
     public Person() {
         super();
+
+        this.anomalies = new HashSet<>();
     }
 
     @Id
@@ -31,6 +35,7 @@ public class Person implements Serializable {
         this.id = id;
     }
 
+    @NotNull
     @Column(name = "name")
     public String getName() {
         return this.name;
@@ -40,6 +45,7 @@ public class Person implements Serializable {
         this.name = name;
     }
 
+    @NotNull
     @ManyToOne
     @JoinColumn(name = "home_planet_id", referencedColumnName = "id")
     public Planet getHomePlanet() {
@@ -50,15 +56,12 @@ public class Person implements Serializable {
         this.homePlanet = homePlanet;
     }
 
-    @ManyToMany
-    @JoinTable(name = "anomaly_victims",
-            joinColumns = @JoinColumn(name = "anomaly_id", referencedColumnName = "id"),
-            inverseJoinColumns = @JoinColumn(name = "person_id", referencedColumnName = "id"))
-    public Set<Person> getPersons() {
-        return this.persons;
+    @ManyToMany(mappedBy = "people")
+    public Set<Anomaly> getAnomalies() {
+        return this.anomalies;
     }
 
-    public void setPersons(Set<Person> persons) {
-        this.persons = persons;
+    public void setAnomalies(Set<Anomaly> anomalies) {
+        this.anomalies = anomalies;
     }
 }

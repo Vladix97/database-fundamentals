@@ -4,12 +4,12 @@ import com.google.gson.annotations.Expose;
 
 import java.io.Serializable;
 
-public class SolarSystemImportDto implements Serializable {
+public class SolarSystemImportJSONDto implements Serializable {
 
     @Expose
     private String name;
 
-    public SolarSystemImportDto() {
+    public SolarSystemImportJSONDto() {
         super();
     }
 

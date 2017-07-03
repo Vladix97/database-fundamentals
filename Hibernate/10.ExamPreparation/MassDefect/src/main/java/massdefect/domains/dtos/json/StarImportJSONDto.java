@@ -5,7 +5,7 @@ import com.google.gson.annotations.SerializedName;
 
 import java.io.Serializable;
 
-public class StarImportDto implements Serializable {
+public class StarImportJSONDto implements Serializable {
 
     @Expose
     private String name;
@@ -14,7 +14,7 @@ public class StarImportDto implements Serializable {
     @Expose
     private String solarSystemName;
 
-    public StarImportDto() {
+    public StarImportJSONDto() {
         super();
     }
 

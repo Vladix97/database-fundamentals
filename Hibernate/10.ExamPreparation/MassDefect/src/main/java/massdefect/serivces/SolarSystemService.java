@@ -1,8 +1,8 @@
 package massdefect.serivces;
 
-import massdefect.domains.dtos.json.SolarSystemImportDto;
+import massdefect.domains.dtos.json.SolarSystemImportJSONDto;
 
 public interface SolarSystemService {
 
-    void create(SolarSystemImportDto solarSystemImportDto);
+    void create(SolarSystemImportJSONDto solarSystemImportDto);
 }

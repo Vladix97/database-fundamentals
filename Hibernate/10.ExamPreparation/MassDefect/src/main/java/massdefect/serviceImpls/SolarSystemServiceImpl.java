@@ -1,6 +1,6 @@
 package massdefect.serviceImpls;
 
-import massdefect.domains.dtos.json.SolarSystemImportDto;
+import massdefect.domains.dtos.json.SolarSystemImportJSONDto;
 import massdefect.domains.entities.SolarSystem;
 import massdefect.parsers.interfaces.ModelParser;
 import massdefect.repositories.SolarSystemRepository;
@@ -22,7 +22,7 @@ public class SolarSystemServiceImpl implements SolarSystemService {
     }
 
     @Override
-    public void create(SolarSystemImportDto solarSystemImportDto) {
+    public void create(SolarSystemImportJSONDto solarSystemImportDto) {
         SolarSystem solarSystem = this.modelParser.convert(solarSystemImportDto, SolarSystem.class);
         this.solarSystemRepository.saveAndFlush(solarSystem);
     }

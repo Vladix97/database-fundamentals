@@ -1,6 +1,6 @@
 package massdefect.serviceImpls;
 
-import massdefect.domains.dtos.json.StarImportDto;
+import massdefect.domains.dtos.json.StarImportJSONDto;
 import massdefect.domains.entities.SolarSystem;
 import massdefect.domains.entities.Star;
 import massdefect.parsers.interfaces.ModelParser;
@@ -27,7 +27,7 @@ public class StarServiceImpl implements StarService {
     }
 
     @Override
-    public void create(StarImportDto starImportDto) {
+    public void create(StarImportJSONDto starImportDto) {
         Star star = this.modelParser.convert(starImportDto, Star.class);
         SolarSystem solarSystem = this.solarSystemRepository.findByName(starImportDto.getSolarSystemName());
         star.setSolarSystem(solarSystem);
