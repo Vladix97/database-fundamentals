@@ -7,7 +7,7 @@ import java.util.Set;
 
 @XmlRootElement(name = "anomaly")
 @XmlAccessorType(XmlAccessType.FIELD)
-public class AnomalyVictimImportXMLDto implements Serializable {
+public class AnomalyXMLDto implements Serializable {
 
     @XmlAttribute(name = "origin-homePlanet")
     private String originPlanetName;
@@ -19,7 +19,7 @@ public class AnomalyVictimImportXMLDto implements Serializable {
     @XmlElement(name = "victim")
     private Set<VictimImportXMLDto> victimImportDtos;
 
-    public AnomalyVictimImportXMLDto() {
+    public AnomalyXMLDto() {
         super();
 
         this.victimImportDtos = new HashSet<>();

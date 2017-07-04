@@ -3,9 +3,8 @@ package massdefect.serivces;
 import massdefect.domains.dtos.json.AnomalyExportJSONDto;
 import massdefect.domains.dtos.json.AnomalyImportJSONDto;
 import massdefect.domains.dtos.json.AnomalyVictimImportJSONDto;
-import massdefect.domains.dtos.xml.AnomalyVictimImportXMLDto;
-
-import java.util.List;
+import massdefect.domains.dtos.xml.AnomalyCollectionXMLDto;
+import massdefect.domains.dtos.xml.AnomalyXMLDto;
 
 public interface AnomalyService {
 
@@ -13,7 +12,9 @@ public interface AnomalyService {
 
     void create(AnomalyVictimImportJSONDto anomalyVictimImportDto);
 
-    void create(AnomalyVictimImportXMLDto anomalyVictimImportXMLDto);
+    void create(AnomalyXMLDto anomalyVictimImportXMLDto);
 
     AnomalyExportJSONDto anomalyWithMostVictims();
+
+    AnomalyCollectionXMLDto findAllAnomalies();
 }

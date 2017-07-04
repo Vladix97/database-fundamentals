@@ -1,8 +1,8 @@
 package massdefect.terminal;
 
 import massdefect.domains.dtos.json.*;
-import massdefect.domains.dtos.xml.AnomalyVictimCollectionImportXMLDto;
-import massdefect.domains.dtos.xml.AnomalyVictimImportXMLDto;
+import massdefect.domains.dtos.xml.AnomalyCollectionXMLDto;
+import massdefect.domains.dtos.xml.AnomalyXMLDto;
 import massdefect.ios.interfaces.ConsoleIO;
 import massdefect.ios.interfaces.FileIO;
 import massdefect.parsers.interfaces.FileParser;
@@ -79,6 +79,7 @@ public class Terminal implements CommandLineRunner {
         exportJSONAllNonOriginPlanets();
         exportNonVictimPeople();
         exportJSONMostAffectingAnomaly();
+        exportAnomaliesToXML();
     }
 
     private void importJSONSolarSystems() {
@@ -196,18 +197,18 @@ public class Terminal implements CommandLineRunner {
     }
 
     private void importXMLAnomaliesVictims() {
-        AnomalyVictimCollectionImportXMLDto anomalyVictimCollectionImportXMLDto = null;
+        AnomalyCollectionXMLDto anomalyVictimCollectionImportXMLDto = null;
 
         try {
             anomalyVictimCollectionImportXMLDto =
-                    this.xmlParser.read(AnomalyVictimCollectionImportXMLDto.class, "/files/xml/input/new-anomalies.xml");
+                    this.xmlParser.read(AnomalyCollectionXMLDto.class, "/files/xml/input/new-anomalies.xml");
         } catch (JAXBException | IOException e) {
             e.printStackTrace();
         }
 
-        Set<AnomalyVictimImportXMLDto> anomalyVictimImportXMLDtos =
-                anomalyVictimCollectionImportXMLDto.getAnomalyVictimImportXMLDtos();
-        for (AnomalyVictimImportXMLDto anomalyVictimImportXMLDto : anomalyVictimImportXMLDtos) {
+        Set<AnomalyXMLDto> anomalyVictimImportXMLDtos =
+                anomalyVictimCollectionImportXMLDto.getAnomalyXMLDtos();
+        for (AnomalyXMLDto anomalyVictimImportXMLDto : anomalyVictimImportXMLDtos) {
             try {
                 this.anomalyService.create(anomalyVictimImportXMLDto);
                 this.consoleIO.write(String.format("Successfully imported Anomaly - Victim XML %s %s.",
@@ -244,6 +245,15 @@ public class Terminal implements CommandLineRunner {
         try {
             this.jsonParser.write(anomalyExportJSONDto, "src/main/resources/files/json/output/anomaly.json");
         } catch (IOException | JAXBException e) {
+            e.printStackTrace();
+        }
+    }
+
+    private void exportAnomaliesToXML(){
+        AnomalyCollectionXMLDto anomaliesXMLDto = this.anomalyService.findAllAnomalies();
+        try {
+            this.xmlParser.write(anomaliesXMLDto, "src/main/resources/files/xml/output/anomalies.xml");
+        } catch (Exception e) {
             e.printStackTrace();
         }
     }

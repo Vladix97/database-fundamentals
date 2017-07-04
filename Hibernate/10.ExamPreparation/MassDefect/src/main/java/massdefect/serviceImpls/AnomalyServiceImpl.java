@@ -3,7 +3,8 @@ package massdefect.serviceImpls;
 import massdefect.domains.dtos.json.AnomalyExportJSONDto;
 import massdefect.domains.dtos.json.AnomalyImportJSONDto;
 import massdefect.domains.dtos.json.AnomalyVictimImportJSONDto;
-import massdefect.domains.dtos.xml.AnomalyVictimImportXMLDto;
+import massdefect.domains.dtos.xml.AnomalyCollectionXMLDto;
+import massdefect.domains.dtos.xml.AnomalyXMLDto;
 import massdefect.domains.dtos.xml.VictimImportXMLDto;
 import massdefect.domains.entities.Anomaly;
 import massdefect.domains.entities.Person;
@@ -61,7 +62,7 @@ public class AnomalyServiceImpl implements AnomalyService {
     }
 
     @Override
-    public void create(AnomalyVictimImportXMLDto anomalyVictimImportXMLDto) {
+    public void create(AnomalyXMLDto anomalyVictimImportXMLDto) {
         Anomaly anomaly = this.modelParser.convert(anomalyVictimImportXMLDto, Anomaly.class);
         Planet originPlanet = this.planetRepository.findByName(anomalyVictimImportXMLDto.getOriginPlanetName());
         Planet teleportPlanet = this.planetRepository.findByName(anomalyVictimImportXMLDto.getTeleportPlanetName());
@@ -90,7 +91,19 @@ public class AnomalyServiceImpl implements AnomalyService {
             }
         };
         AnomalyExportJSONDto anomalyExportJSONDto = this.modelParser.convert(anomaly, AnomalyExportJSONDto.class, propertyMap);
-        System.out.println();
         return anomalyExportJSONDto;
+    }
+
+    @Override
+    public AnomalyCollectionXMLDto findAllAnomalies() {
+        List<Anomaly> allAnomalies = this.anomalyRepository.findAllAnomalies();
+        AnomalyCollectionXMLDto anomalyCollectionXMLDto = new AnomalyCollectionXMLDto();
+
+        for (Anomaly a : allAnomalies) {
+            AnomalyXMLDto convert = this.modelParser.convert(a, AnomalyXMLDto.class);
+            anomalyCollectionXMLDto.getAnomalyXMLDtos().add(convert);
+        }
+
+        return anomalyCollectionXMLDto;
     }
 }

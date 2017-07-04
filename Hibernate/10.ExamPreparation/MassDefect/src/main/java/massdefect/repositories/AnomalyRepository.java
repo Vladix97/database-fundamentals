@@ -16,4 +16,7 @@ public interface AnomalyRepository extends JpaRepository<Anomaly, Long> {
             "GROUP BY a " +
             "ORDER BY COUNT(v) DESC")
     List<Anomaly> anomaliesOrderedByVictimsDesc();
+
+    @Query(value = "SELECT a FROM Anomaly AS a")
+    List<Anomaly> findAllAnomalies();
 }
