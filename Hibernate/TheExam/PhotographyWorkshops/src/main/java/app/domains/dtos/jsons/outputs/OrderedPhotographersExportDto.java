@@ -1,33 +1,26 @@
-package app.domains.dtos.jsons.inputs;
+package app.domains.dtos.jsons.outputs;
 
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 
 import java.io.Serializable;
-import java.util.ArrayList;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
 
-public class PhotographerDto implements Serializable {
+public class OrderedPhotographersExportDto implements Serializable {
 
+    @SerializedName(value = "FirstName")
     @Expose
     private String firstName;
 
+    @SerializedName(value = "LastName")
     @Expose
     private String lastName;
 
-    @SerializedName(value = "phone")
+    @SerializedName(value = "Phone")
     @Expose
     private String phoneNumber;
 
-    @Expose
-    private Set<Long> lenses;
-
-    public PhotographerDto() {
+    public OrderedPhotographersExportDto() {
         super();
-
-        this.lenses = new HashSet<>();
     }
 
     public String getFirstName() {
@@ -52,13 +45,5 @@ public class PhotographerDto implements Serializable {
 
     public void setPhoneNumber(String phoneNumber) {
         this.phoneNumber = phoneNumber;
-    }
-
-    public Set<Long> getLenses() {
-        return this.lenses;
-    }
-
-    public void setLenses(Set<Long> lenses) {
-        this.lenses = lenses;
     }
 }

@@ -7,6 +7,8 @@ import javax.persistence.*;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 import java.io.Serializable;
+import java.util.HashSet;
+import java.util.Set;
 
 @Entity
 @Table(name = "photographers")
@@ -40,8 +42,13 @@ public class Photographer implements Serializable {
     @JoinColumn(name = "secondary_camera_id")
     private AbstractCamera secondaryCamera;
 
+    @OneToMany(mappedBy = "owner")
+    private Set<Lens> lenses;
+
     public Photographer() {
         super();
+
+        this.lenses = new HashSet<>();
     }
 
     public Long getId() {
@@ -90,5 +97,21 @@ public class Photographer implements Serializable {
 
     public void setSecondaryCamera(AbstractCamera secondaryCamera) {
         this.secondaryCamera = secondaryCamera;
+    }
+
+    public Set<Lens> getLenses() {
+        return this.lenses;
+    }
+
+    public void setLenses(Set<Lens> lenses) {
+        this.lenses = lenses;
+    }
+
+    public String getName() {
+        return this.firstName + " " + this.lastName;
+    }
+
+    public String getCamera() {
+        return this.primaryCamera.getMake() + " " + this.primaryCamera.getModel();
     }
 }

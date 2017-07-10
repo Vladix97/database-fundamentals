@@ -86,4 +86,9 @@ public abstract class AbstractCamera implements Serializable {
     public void setMaxISO(Integer maxISO) {
         this.maxISO = maxISO;
     }
+
+    @Override
+    public String toString() {
+        return String.format("%s %s", this.getMake(), this.getModel());
+    }
 }

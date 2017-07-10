@@ -1,9 +1,14 @@
 package app.serviceImpls;
 
 import app.domains.dtos.jsons.inputs.PhotographerDto;
+import app.domains.dtos.jsons.outputs.LandscapePhotographersExportDto;
+import app.domains.dtos.jsons.outputs.OrderedPhotographersExportDto;
+import app.domains.dtos.xmls.outputs.PhotographerWithSameCamerasCollectionDto;
+import app.domains.dtos.xmls.outputs.PhotographerWithSameCamerasDto;
 import app.domains.entities.Lens;
 import app.domains.entities.Photographer;
 import app.domains.entities.cameras.AbstractCamera;
+import app.domains.entities.cameras.DSLRCamera;
 import app.parsers.interfaces.ModelParser;
 import app.repositories.CameraRepository;
 import app.repositories.LensRepository;
@@ -12,11 +17,15 @@ import app.services.PhotographerService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.util.Random;
+import javax.transaction.Transactional;
+import java.util.ArrayList;
+import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 import java.util.concurrent.ThreadLocalRandom;
 
 @Service
+@Transactional
 public class PhotographerServiceImpl implements PhotographerService {
 
     private final ModelParser modelParser;
@@ -44,10 +53,11 @@ public class PhotographerServiceImpl implements PhotographerService {
         photographer.setPrimaryCamera(primaryCamera);
         photographer.setSecondaryCamera(secondaryCamera);
 
+        this.photographerRepository.saveAndFlush(photographer);
         int count = 0;
-        Set<Integer> lenses = photographerDto.getLenses();
-        for (Integer lensId : lenses) {
-            Lens lens = this.lensRepository.findOne((long) lensId);
+        Set<Long> lenses = photographerDto.getLenses();
+        for (Long lensId : lenses) {
+            Lens lens = this.lensRepository.findOne(lensId);
             if (lens == null) {
                 continue;
             }
@@ -58,17 +68,62 @@ public class PhotographerServiceImpl implements PhotographerService {
             }
 
             lens.setOwner(photographer);
-            lensRepository.saveAndFlush(lens);
+            this.lensRepository.saveAndFlush(lens);
             count++;
         }
 
         return count;
     }
 
+    @Override
+    public List<OrderedPhotographersExportDto> findAllByFirstNameAscLastNameDsc() {
+        List<Photographer> photographers = this.photographerRepository.findAllByFirstNameAscLastNameDsc();
 
-    private AbstractCamera getRandomCamera(){
-        long cameraCount = this.cameraRepository.count();
-        long randomId = ThreadLocalRandom.current().nextLong(1, cameraCount + 1);
+        List<OrderedPhotographersExportDto> photographerExportDtos = new ArrayList<>();
+        for (Photographer photographer : photographers) {
+            OrderedPhotographersExportDto dto = this.modelParser.convert(photographer, OrderedPhotographersExportDto.class);
+            photographerExportDtos.add(dto);
+        }
+
+        return photographerExportDtos;
+    }
+
+    @Override
+    public List<LandscapePhotographersExportDto> findAllLandscapePhotographers() {
+        List<Photographer> allWithLenses = this.photographerRepository.findAllWithLenses();
+        List<LandscapePhotographersExportDto> landscapePhotographersExportDtos = new ArrayList<>();
+
+        for (Photographer allWithLens : allWithLenses) {
+            if (allWithLens.getPrimaryCamera() instanceof DSLRCamera) {
+                LandscapePhotographersExportDto dto =
+                        this.modelParser.convert(allWithLens, LandscapePhotographersExportDto.class);
+                landscapePhotographersExportDtos.add(dto);
+                dto.setCount(allWithLens.getLenses().size());
+            }
+        }
+
+        return landscapePhotographersExportDtos;
+    }
+
+    @Override
+    public PhotographerWithSameCamerasCollectionDto findAllWithSameCameras() {
+        List<Photographer> photographers = this.photographerRepository.findAllWithSameCameras();
+        Set<PhotographerWithSameCamerasDto> photographerCameraExportXMLs = new HashSet<>();
+        for (Photographer photographer : photographers) {
+            PhotographerWithSameCamerasDto dto =
+                    this.modelParser.convert(photographer, PhotographerWithSameCamerasDto.class);
+            photographerCameraExportXMLs.add(dto);
+        }
+
+        PhotographerWithSameCamerasCollectionDto photographersCameraExportXML =
+                new PhotographerWithSameCamerasCollectionDto();
+        photographersCameraExportXML.setPhotographerWithSameCamerasDtos(photographerCameraExportXMLs);
+        return photographersCameraExportXML;
+    }
+
+    private AbstractCamera getRandomCamera() {
+        Long cameraCount = this.cameraRepository.count();
+        Long randomId = ThreadLocalRandom.current().nextLong(1, cameraCount + 1);
         return this.cameraRepository.findOne(randomId);
     }
 }

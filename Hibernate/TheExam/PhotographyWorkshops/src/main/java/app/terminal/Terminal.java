@@ -3,13 +3,19 @@ package app.terminal;
 import app.domains.dtos.jsons.inputs.CameraDto;
 import app.domains.dtos.jsons.inputs.LensDto;
 import app.domains.dtos.jsons.inputs.PhotographerDto;
+import app.domains.dtos.jsons.outputs.LandscapePhotographersExportDto;
+import app.domains.dtos.jsons.outputs.OrderedPhotographersExportDto;
+import app.domains.dtos.xmls.inputs.AccessoryCollectionDto;
+import app.domains.dtos.xmls.inputs.AccessoryDto;
+import app.domains.dtos.xmls.inputs.WorkshopCollectionDto;
+import app.domains.dtos.xmls.inputs.WorkshopDto;
+import app.domains.dtos.xmls.outputs.PhotographerWithSameCamerasCollectionDto;
+import app.domains.entities.Photographer;
 import app.ios.interfaces.ConsoleIO;
 import app.ios.interfaces.FileIO;
 import app.parsers.XMLParser;
 import app.parsers.interfaces.FileParser;
-import app.services.CameraService;
-import app.services.LensService;
-import app.services.PhotographerService;
+import app.services.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.boot.CommandLineRunner;
@@ -17,6 +23,8 @@ import org.springframework.stereotype.Component;
 
 import javax.xml.bind.JAXBException;
 import java.io.IOException;
+import java.util.List;
+import java.util.Set;
 
 @Component
 public class Terminal implements CommandLineRunner {
@@ -35,6 +43,10 @@ public class Terminal implements CommandLineRunner {
 
     private final PhotographerService photographerService;
 
+    private final AccessoryService accessoryService;
+
+    private final WorkshopService workshopService;
+
     @Autowired
     public Terminal(
             ConsoleIO consoleIO,
@@ -43,7 +55,9 @@ public class Terminal implements CommandLineRunner {
             @Qualifier(value = "XMLParser") XMLParser XMLParser,
             LensService lensService,
             CameraService cameraService,
-            PhotographerService photographerService) {
+            PhotographerService photographerService,
+            AccessoryService accessoryService,
+            WorkshopService workshopService) {
         this.consoleIO = consoleIO;
         this.fileIO = fileIO;
         this.JSONParser = JSONParser;
@@ -51,6 +65,8 @@ public class Terminal implements CommandLineRunner {
         this.lensService = lensService;
         this.cameraService = cameraService;
         this.photographerService = photographerService;
+        this.accessoryService = accessoryService;
+        this.workshopService = workshopService;
     }
 
     @Override
@@ -60,10 +76,18 @@ public class Terminal implements CommandLineRunner {
         System.out.println("*** LIVE *** LIVE ** LIVE ***");
         System.out.println("*** LIVE *** LIVE ** LIVE ***");
 
-        importLenses();
-        importCameras();
-        importPhotographers();
-        
+        // IMPORTS
+//        importLenses();
+//        importCameras();
+//        importPhotographers();
+//        importAccessories();
+//        importWorkshops();
+
+        // EXPORTS
+        exportOrderedPhotographers();
+        exportLandscapePhotographers();
+        exportSameCamerasPhotographers();
+
     }
 
     private void importLenses() {
@@ -120,6 +144,77 @@ public class Terminal implements CommandLineRunner {
             } catch (Exception e) {
                 this.consoleIO.write("Invalid Photographer");
             }
+        }
+    }
+
+    private void importAccessories() {
+        AccessoryCollectionDto accessoryCollectionDto = null;
+        try {
+            accessoryCollectionDto = this.XMLParser.read(AccessoryCollectionDto.class, "/files/xml/input/accessories.xml");
+        } catch (JAXBException | IOException e) {
+            e.printStackTrace();
+        }
+
+        Set<AccessoryDto> accessoryDtos = accessoryCollectionDto.getAccessoryDtos();
+        for (AccessoryDto accessoryDto : accessoryDtos) {
+            try {
+                this.accessoryService.create(accessoryDto);
+                this.consoleIO.write(String.format("Successfully imported %s", accessoryDto.getName()));
+            } catch (Exception e) {
+                this.consoleIO.write("Invalid Accessory");
+            }
+        }
+    }
+
+    private void importWorkshops() {
+        WorkshopCollectionDto workshopCollectionDto = null;
+        try {
+            workshopCollectionDto = this.XMLParser.read(WorkshopCollectionDto.class, "/files/xml/input/workshops.xml");
+        } catch (JAXBException | IOException e) {
+            e.printStackTrace();
+        }
+
+        Set<WorkshopDto> workshopDtos = workshopCollectionDto.getWorkshopDtos();
+        for (WorkshopDto workshopDto : workshopDtos) {
+            try {
+                this.workshopService.create(workshopDto);
+                this.consoleIO.write(String.format("Successfully imported %s", workshopDto.getName()));
+            } catch (Exception e) {
+                this.consoleIO.write("Invalid Workshop");
+            }
+        }
+    }
+
+    private void exportOrderedPhotographers() {
+        List<OrderedPhotographersExportDto> allByFirstNameAscLastNameDsc =
+                this.photographerService.findAllByFirstNameAscLastNameDsc();
+
+        try {
+            this.JSONParser.write(allByFirstNameAscLastNameDsc, "src/main/resources/files/json/output/photographers-ordered.json");
+        } catch (JAXBException | IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+    private void exportLandscapePhotographers() {
+        List<LandscapePhotographersExportDto> allLandscapePhotographers =
+                this.photographerService.findAllLandscapePhotographers();
+
+        try {
+            this.JSONParser.write(allLandscapePhotographers, "src/main/resources/files/json/output/landscape-photographers.json");
+        } catch (JAXBException | IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+    private void exportSameCamerasPhotographers() {
+        PhotographerWithSameCamerasCollectionDto allWithSameCameras =
+                this.photographerService.findAllWithSameCameras();
+
+        try {
+            this.XMLParser.write(allWithSameCameras, "src/main/resources/files/xml/output/same-cameras-photographers.xml");
+        } catch (JAXBException | IOException e) {
+            e.printStackTrace();
         }
     }
 }
